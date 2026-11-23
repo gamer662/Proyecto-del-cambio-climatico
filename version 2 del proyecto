@@ -1,0 +1,207 @@
+# Importar las bibliotecas necesarias
+import asyncio  # Permite ejecutar tareas sin bloquear el bot (hilos y subprocesos asíncronos)
+# Permite leer variables de entorno, como el token del bot
+import os
+
+import discord  # Biblioteca para trabajar con la API de Discord
+import sys
+import requests  # Biblioteca para hacer solicitudes HTTP
+from discord.ext import commands  # Módulo para crear comandos del bot
+
+# Inicializar el objeto del bot
+intents = discord.Intents.default()  # Permisos básicos del bot
+intents.message_content = True  # Habilitar la lectura del contenido de los mensajes (necesario para los comandos con "!")
+bot = commands.Bot(command_prefix="!", intents=intents)  # Crear el bot con el prefijo "!"
+
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user.name} - {bot.user.id}')
+    print('------')
+    
+async def speak(texto: str, voz: str = "Daniel"):
+    proceso = await asyncio.create_subprocess_exec("say", "-v", voz, texto)
+    await proceso.wait()
+
+@bot.command()
+async def hola(ctx):
+    await ctx.send('¡Hola! Soy un bot de Discord que puede proporcionarte información sobre el cambio climático. Puedes preguntarme sobre sus efectos, causas o soluciones. Usa el comando !ayudame para ver la lista de comandos disponibles.')
+
+async def speak(texto: str, voz: str = "Monica"):
+    """Lee el texto en voz alta con la voz del Mac sin bloquear el bot."""
+    proceso = await asyncio.create_subprocess_exec("say", "-v", voz, texto)
+    await proceso.wait()
+
+@bot.command()
+async def hello(ctx):
+    mensaje = ('Hello! I am a Discord bot that can provide you with information about climate change. '
+               'You can ask me about its effects, causes, or solutions. '
+               'Use the command !ayudame to see the list of available commands.')
+    await ctx.send(mensaje)
+    await speak(mensaje, voz="Daniel")   # inglés británico
+
+
+async def speak(texto: str):
+    """Lee el texto en voz alta con la voz del Mac sin bloquear el bot."""
+    proceso = await asyncio.create_subprocess_exec("say", "-v", "Diego", texto)
+    await proceso.wait()
+
+
+@bot.command()
+async def hola2(ctx: commands.Context):  # ctx contiene la información del mensaje (canal, autor, etc.)
+    """Envía un dato curioso al canal y lo lee en voz alta."""
+    info = '¡Hola! Soy un bot de Discord que puede proporcionarte información sobre el cambio climático. Puedes preguntarme sobre sus efectos, causas o soluciones. Usa el comando !ayudame para ver la lista de comandos disponibles.'  # Ejecutar la petición HTTP en otro hilo para no bloquear el bot
+    await ctx.send(f"Hablando: {info}")  # Enviar el dato curioso al canal de Discord
+    await speak(info)  # Leer el dato en voz alta por los altavoces del Mac
+
+async def speak(texto: str):
+    """Lee el texto en voz alta con la voz del Mac sin bloquear el bot."""
+    proceso = await asyncio.create_subprocess_exec("say", "-v", "Daniel", texto)
+    await proceso.wait()
+
+@bot.command()
+async def ping2(ctx):
+    """Envía un mensaje de respuesta al canal y lo lee en voz alta."""
+    info = 'Pong!'  # Ejecutar la petición HTTP en otro hilo para no bloquear el bot
+    await ctx.send(f"Hablando: {info}")  # Enviar el dato curioso al canal de Discord
+    await speak(info)  # Leer el dato en voz alta por los altavoces del Mac
+@bot.command()
+async def ping(ctx):
+    await ctx.send('Pong!')
+
+@bot.command()
+async def cambioq(ctx):
+    await ctx.send('El cambio climático es un fenómeno global que afecta a todos los países y regiones del mundo. Se refiere a los cambios a largo plazo en los patrones de temperatura, precipitación y otros aspectos del clima. Estos cambios pueden ser causados por factores naturales, como erupciones volcánicas y variaciones solares, así como por actividades humanas, como la quema de combustibles fósiles y la deforestación. El cambio climático tiene impactos significativos en los ecosistemas, la biodiversidad, la agricultura, la salud humana y la economía. Es importante tomar medidas para mitigar sus efectos y adaptarse a los cambios que ya están ocurriendo.')
+
+@bot.command()
+async def cambioa(ctx):
+    await ctx.send('El cambio climático nos afecta a todos de diversas maneras. Entre los impactos más evidentes se encuentran el aumento de las temperaturas globales, el derretimiento de los glaciares y el aumento del nivel del mar, lo que puede provocar inundaciones en áreas costeras. Además, se observan cambios en los patrones de precipitación, lo que puede llevar a sequías en algunas regiones y lluvias intensas en otras. Estos cambios afectan la agricultura, la disponibilidad de agua potable y la salud humana, aumentando la incidencia de enfermedades relacionadas con el clima. También se producen fenómenos meteorológicos extremos, como huracanes y olas de calor, que ponen en riesgo la vida y los medios de subsistencia de muchas personas.')
+
+@bot.command()
+async def cambiog(ctx):
+    await ctx.send('El cambio climático si es grave')
+
+
+async def speak(texto: str):
+    """Lee el texto en voz alta con la voz del Mac sin bloquear el bot."""
+    proceso = await asyncio.create_subprocess_exec("say", "-v", "Diego", texto)
+    await proceso.wait()
+
+
+@bot.command()
+async def cambioqa(ctx: commands.Context):  # ctx contiene la información del mensaje (canal, autor, etc.)
+    """Envía un dato curioso al canal y lo lee en voz alta."""
+    info = 'El cambio climático es un fenómeno global que afecta a todos los países y regiones del mundo. Se refiere a los cambios a largo plazo en los patrones de temperatura, precipitación y otros aspectos del clima. Estos cambios pueden ser causados por factores naturales, como erupciones volcánicas y variaciones solares, así como por actividades humanas, como la quema de combustibles fósiles y la deforestación. El cambio climático tiene impactos significativos en los ecosistemas, la biodiversidad, la agricultura, la salud humana y la economía. Es importante tomar medidas para mitigar sus efectos y adaptarse a los cambios que ya están ocurriendo.'  # Ejecutar la petición HTTP en otro hilo para no bloquear el bot
+    await ctx.send(f"Hablando: {info}")  # Enviar el dato curioso al canal de Discord
+    await speak(info)  # Leer el dato en voz alta por los altavoces del Mac
+
+@bot.command()
+async def cambiof(ctx):
+    await ctx.send('El cambio climático se puede frenar si tomamos medidas urgentes y efectivas. Algunas de las acciones que podemos tomar incluyen reducir las emisiones de gases de efecto invernadero mediante el uso de energías renovables, mejorar la eficiencia energética, promover la reforestación y conservar los ecosistemas naturales. Además, es importante fomentar la educación y la conciencia sobre el cambio climático, así como implementar políticas y regulaciones que apoyen la sostenibilidad ambiental. La cooperación internacional también es crucial para abordar este desafío global y garantizar un futuro más seguro y saludable para las generaciones venideras.')
+
+
+@bot.command()
+async def cambioi(ctx):
+    await ctx.send('El cambio climático es causado principalmente por la actividad humana, especialmente la quema de combustibles fósiles como el carbón, el petróleo y el gas natural. Esta actividad libera grandes cantidades de dióxido de carbono (CO2) y otros gases de efecto invernadero en la atmósfera, lo que atrapa el calor y provoca un aumento de la temperatura global. Además, la deforestación y la degradación del suelo contribuyen a la liberación de CO2 y reducen la capacidad de los ecosistemas para absorberlo. Otros factores naturales, como las erupciones volcánicas y las variaciones solares, también pueden influir en el clima, pero su impacto es menor en comparación con las actividades humanas.')
+@bot.command()
+async def ayudame(ctx):
+    await ctx.send('''Puedo ayudarte con información sobre el cambio climático. Puedes preguntarme sobre sus efectos, causas o soluciones.
+    ping: Pong!
+    ping2: Pong! y lo lee en voz alta.
+    hola: Saluda al bot y le pide información sobre el cambio climático.
+    hola2: Saluda al bot y le pide información sobre el cambio climático y lo lee
+    cambioq: Información sobre qué es el cambio climático.
+    cambioa: Información sobre cómo nos afecta el cambio climático.
+    cambiog: Información sobre la gravedad del cambio climático.
+    cambiof: Información sobre cómo frenar el cambio climático.
+    cambioi: Información sobre las causas del cambio climático.
+    ayudame: Muestra este mensaje de ayuda.
+    ayudame2: Muestra este mensaje de ayuda en voz alta.
+    cambioqa: Información sobre qué es el cambio climático y lo lee en voz alta.
+    cambioia: Información sobre las causas del cambio climático y lo lee en voz alta.
+    cambioa2: Información sobre cómo nos afecta el cambio climático y lo lee en voz alta.
+    cambioga: Información sobre la gravedad del cambio climático y lo lee en voz alta.
+    cambiofa: Información sobre cómo frenar el cambio climático y lo lee en voz alta.
+
+    ''')
+
+async def speak(texto: str):
+    """Lee el texto en voz alta con la voz del Mac sin bloquear el bot."""
+    proceso = await asyncio.create_subprocess_exec("say", "-v", "Diego", texto)
+    await proceso.wait()
+
+async def cambiofa(ctx):  # ctx contiene la información del mensaje (canal, autor, etc.)
+    """Envía un dato curioso al canal y lo lee en voz alta."""
+    info = 'El cambio climático puede frenarse con acciones individuales y colectivas, como el uso de energías renovables, la eficiencia energética y la reducción del consumo de carne.'  # Ejecutar la petición HTTP en otro hilo para no bloquear el bot
+    await ctx.send(f"Hablando: {info}")  # Enviar el dato curioso al canal de Discord
+    await speak(info)  # Leer el dato en voz alta por los altavoces del Mac
+
+async def speak(texto: str):
+    """Lee el texto en voz alta con la voz del Mac sin bloquear el bot."""
+    proceso = await asyncio.create_subprocess_exec("say", "-v", "Diego", texto)
+    await proceso.wait()
+
+
+async def cambioga(ctx):
+    """Envía un dato curioso al canal y lo lee en voz alta."""
+    info = 'El cambio climático si es grave'  # Ejecutar la petición HTTP en otro hilo para no bloquear el bot
+    await ctx.send(f"Hablando: {info}")  # Enviar el dato curioso al canal de Discord
+    await speak(info)  # Leer el dato en voz alta por los altavoces del Mac
+
+
+async def speak(texto: str):
+    """Lee el texto en voz alta con la voz del Mac sin bloquear el bot."""
+    proceso = await asyncio.create_subprocess_exec("say", "-v", "Diego", texto)
+    await proceso.wait()
+
+
+async def cambioa2(ctx):  # ctx contiene la información del mensaje (canal, autor, etc.)
+    """Envía un dato curioso al canal y lo lee en voz alta."""
+    info = 'El cambio climático nos afecta a todos de diversas maneras. Entre los impactos más evidentes se encuentran el aumento de las temperaturas globales, el derretimiento de los glaciares y el aumento del nivel del mar, lo que puede provocar inundaciones en áreas costeras. Además, se observan cambios en los patrones de precipitación, lo que puede llevar a sequías en algunas regiones y lluvias intensas en otras. Estos cambios afectan la agricultura, la disponibilidad de agua potable y la salud humana, aumentando la incidencia de enfermedades relacionadas con el clima. También se producen fenómenos meteorológicos extremos, como huracanes y olas de calor, que ponen en riesgo la vida y los medios de subsistencia de muchas personas.'  # Ejecutar la petición HTTP en otro hilo para no bloquear el bot
+    await ctx.send(f"Hablando: {info}")  # Enviar el dato curioso al canal de Discord
+    await speak(info)  # Leer el dato en voz alta por los altavoces del Mac   
+
+async def speak(texto: str):
+    """Lee el texto en voz alta con la voz del Mac sin bloquear el bot."""
+    proceso = await asyncio.create_subprocess_exec("say", "-v", "Diego", texto)
+    await proceso.wait()
+
+
+@bot.command()
+async def cambioia(ctx):  # ctx contiene la información del mensaje (canal, autor, etc.)
+    """Envía un dato curioso al canal y lo lee en voz alta."""
+    info = 'El cambio climático es causado principalmente por la actividad humana, especialmente la quema de combustibles fósiles como el carbón, el petróleo y el gas natural. Esta actividad libera grandes cantidades de dióxido de carbono (CO2) y otros gases de efecto invernadero en la atmósfera, lo que atrapa el calor y provoca un aumento de la temperatura global. Además, la deforestación y la degradación del suelo contribuyen a la liberación de CO2 y reducen la capacidad de los ecosistemas para absorberlo. Otros factores naturales, como las erupciones volcánicas y las variaciones solares, también pueden influir en el clima, pero su impacto es menor en comparación con las actividades humanas.'  # Ejecutar la petición HTTP en otro hilo para no bloquear el bot
+    await ctx.send(f"Hablando: {info}")  # Enviar el dato curioso al canal de Discord
+    await speak(info)  # Leer el dato en voz alta por los altavoces del Mac
+
+async def speak(texto: str):
+    """Lee el texto en voz alta con la voz del Mac sin bloquear el bot."""
+    proceso = await asyncio.create_subprocess_exec("say", "-v", "Diego", texto)
+    await proceso.wait()
+
+
+@bot.command()
+async def ayudame2(ctx: commands.Context):  # ctx contiene la información del mensaje (canal, autor, etc.)
+    """Envía un dato curioso al canal y lo lee en voz alta."""
+    info = '''Puedo ayudarte con información sobre el cambio climático. Puedes preguntarme sobre sus efectos, causas o soluciones.
+    ping: Pong!
+    ping2: Pong! y lo lee en voz alta.
+    hola: Saluda al bot y le pide información sobre el cambio climático.
+    hola2: Saluda al bot y le pide información sobre el cambio climático y lo lee
+    cambioq: Información sobre qué es el cambio climático.
+    cambioa: Información sobre cómo nos afecta el cambio climático.
+    cambiog: Información sobre la gravedad del cambio climático.
+    cambiof: Información sobre cómo frenar el cambio climático.
+    cambioi: Información sobre las causas del cambio climático.
+    ayudame: Muestra este mensaje de ayuda.
+    ayudame2: Muestra este mensaje de ayuda en voz alta.
+    cambioqa: Información sobre qué es el cambio climático y lo lee en voz alta.
+    cambioia: Información sobre las causas del cambio climático y lo lee en voz alta.
+    cambioa2: Información sobre cómo nos afecta el cambio climático y lo lee en voz alta.
+    cambioga: Información sobre la gravedad del cambio climático y lo lee en voz alta.
+    cambiofa: Información sobre cómo frenar el cambio climático y lo lee en voz alta.
+'''  # Ejecutar la petición HTTP en otro hilo para no bloquear el bot
+    await ctx.send(f"Hablando: {info}")  # Enviar el dato curioso al canal de Discord
+    await speak(info)  # Leer el dato en voz alta por los altavoces del Mac
+
+
+bot.run('token')
