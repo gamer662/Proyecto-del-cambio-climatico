@@ -1,0 +1,247 @@
+import asyncio
+import os
+
+import discord
+from discord.ext import commands
+from dotenv import load_dotenv
+
+# Load the token from the .env file (DISCORD_TOKEN=your_token)
+load_dotenv()
+
+# ---------------------------------------------------------------------------
+# Bot configuration
+# ---------------------------------------------------------------------------
+intents = discord.Intents.default()
+intents.message_content = True  # required to read "!" commands
+bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
+
+VOICE = "Daniel"  # Mac voice (say -v Daniel)
+
+# ---------------------------------------------------------------------------
+# Texts
+# ---------------------------------------------------------------------------
+TEXT_HELLO = (
+    "Hello! I am a Discord bot that can provide you with information about "
+    "climate change. You can ask me about its effects, causes, or solutions. "
+    "Use the command !ayudame to see the list of available commands."
+)
+
+TEXT_WHAT_IS = (
+    "Climate change is a global phenomenon that affects every country and "
+    "region of the world. It refers to long-term changes in temperature, "
+    "precipitation patterns, and other aspects of the climate. These changes "
+    "can be caused by natural factors, such as volcanic eruptions and solar "
+    "variations, as well as by human activities, such as burning fossil fuels "
+    "and deforestation. Climate change has significant impacts on ecosystems, "
+    "biodiversity, agriculture, human health, and the economy. It is "
+    "important to take action to mitigate its effects and adapt to the "
+    "changes that are already happening."
+)
+
+TEXT_AFFECTS = (
+    "Climate change affects us all in various ways. Among the most evident "
+    "impacts are the increase in global temperatures, the melting of glaciers "
+    "and the rise in sea levels, which can cause flooding in coastal areas. "
+    "Furthermore, changes in precipitation patterns are observed, leading to "
+    "droughts in some regions and intense rainfall in others. These changes "
+    "affect agriculture, the availability of drinking water, and human health, "
+    "increasing the incidence of climate-related diseases. Extreme weather "
+    "events, such as hurricanes and heat waves, also pose risks to life and "
+    "livelihoods."
+)
+
+TEXT_SERIOUS = (
+    "Climate change is indeed serious. It poses significant risks to the "
+    "environment, human health, and the global economy. The consequences of "
+    "climate change include rising sea levels, more frequent and severe "
+    "weather events, loss of biodiversity, and disruptions to food and water "
+    "supplies. These impacts can lead to displacement of populations, "
+    "increased poverty, and social instability. Addressing climate change "
+    "requires urgent action to reduce greenhouse gas emissions, transition to "
+    "renewable energy sources, and implement sustainable practices across "
+    "various sectors. Failure to act could result in irreversible damage to "
+    "our planet and future generations."
+)
+
+TEXT_STOP = (
+    "Climate change can be slowed down if we take urgent and effective "
+    "measures. Some of the actions we can take include reducing greenhouse "
+    "gas emissions through the use of renewable energy, improving energy "
+    "efficiency, promoting reforestation, and conserving natural ecosystems. "
+    "Additionally, it is important to foster education and awareness about "
+    "climate change, as well as to implement policies and regulations that "
+    "support environmental sustainability. International cooperation is also "
+    "crucial for addressing this global challenge and ensuring a safer and "
+    "healthier future for generations to come."
+)
+
+TEXT_CAUSES = (
+    "Climate change is primarily caused by human activity, especially the "
+    "burning of fossil fuels such as coal, oil, and natural gas. This "
+    "activity releases large quantities of carbon dioxide (CO2) and other "
+    "greenhouse gases into the atmosphere, which trap heat and cause a rise "
+    "in global temperatures. Furthermore, deforestation and soil degradation "
+    "contribute to the release of CO2 and reduce the capacity of ecosystems "
+    "to absorb it. Natural factors, such as volcanic eruptions and solar "
+    "variations, can also influence the climate, but their impact is smaller "
+    "compared to human activities."
+)
+
+TEXT_HELP = """I can help you with information about climate change. You can ask me about its effects, causes, or solutions.
+**Text commands**
+!ping: Pong!
+!hola: A greeting.
+!hello: A greeting (also read aloud).
+!cambioq: What climate change is.
+!cambioa: How it affects us.
+!cambiog: How serious it is.
+!cambiof: How to stop it.
+!cambioi: Causes.
+!ayudame or !help: Displays this message.
+**Commands that are also read aloud**
+!ping2, !hola2, !cambioqa, !cambioa2, !cambioga, !cambiofa, !cambioia, !ayudame2, !help2"""
+
+TEXT_HELP_VOICE = (
+    "I can help you with information about climate change. "
+    "Check the list of commands in the chat."
+)
+
+
+# ---------------------------------------------------------------------------
+# Helper functions
+# ---------------------------------------------------------------------------
+async def speak(text: str, voice: str = VOICE):
+    """Read the text aloud with the Mac voice without blocking the bot."""
+    process = await asyncio.create_subprocess_exec("say", "-v", voice, text)
+    await process.wait()
+
+
+async def reply(ctx: commands.Context, text: str, speak_aloud: bool = False,
+                voice_text: str | None = None):
+    """Send the text to the channel (max. 2000 characters) and optionally read it aloud."""
+    await ctx.send(text[:2000])
+    if speak_aloud:
+        await speak(voice_text or text)
+
+
+# ---------------------------------------------------------------------------
+# Events
+# ---------------------------------------------------------------------------
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user.name} - {bot.user.id}")
+    print("------")
+
+
+# ---------------------------------------------------------------------------
+# Text-only commands
+# ---------------------------------------------------------------------------
+@bot.command()
+async def ping(ctx):
+    await reply(ctx, "Pong!")
+
+
+@bot.command()
+async def hola(ctx):
+    await reply(ctx, TEXT_HELLO)
+
+
+@bot.command()
+async def cambioq(ctx):
+    await reply(ctx, TEXT_WHAT_IS)
+
+
+@bot.command()
+async def cambioa(ctx):
+    await reply(ctx, TEXT_AFFECTS)
+
+
+@bot.command()
+async def cambiog(ctx):
+    await reply(ctx, TEXT_SERIOUS)
+
+
+@bot.command()
+async def cambiof(ctx):
+    await reply(ctx, TEXT_STOP)
+
+
+@bot.command()
+async def cambioi(ctx):
+    await reply(ctx, TEXT_CAUSES)
+
+
+@bot.command()
+async def ayudame(ctx):
+    await reply(ctx, TEXT_HELP)
+
+
+@bot.command(name="help")
+async def help_command(ctx):
+    await reply(ctx, TEXT_HELP)
+
+
+# ---------------------------------------------------------------------------
+# Commands that also speak aloud
+# ---------------------------------------------------------------------------
+@bot.command()
+async def hello(ctx):
+    await reply(ctx, TEXT_HELLO, speak_aloud=True,
+                voice_text=TEXT_HELLO.replace("!", ""))
+
+
+@bot.command()
+async def ping2(ctx):
+    await reply(ctx, "Pong!", speak_aloud=True)
+
+
+@bot.command()
+async def hola2(ctx):
+    await reply(ctx, TEXT_HELLO, speak_aloud=True,
+                voice_text=TEXT_HELLO.replace("!", ""))
+
+
+@bot.command()
+async def cambioqa(ctx):
+    await reply(ctx, TEXT_WHAT_IS, speak_aloud=True)
+
+
+@bot.command()
+async def cambioa2(ctx):
+    await reply(ctx, TEXT_AFFECTS, speak_aloud=True)
+
+
+@bot.command()
+async def cambioga(ctx):
+    await reply(ctx, TEXT_SERIOUS, speak_aloud=True)
+
+
+@bot.command()
+async def cambiofa(ctx):
+    await reply(ctx, TEXT_STOP, speak_aloud=True)
+
+
+@bot.command()
+async def cambioia(ctx):
+    await reply(ctx, TEXT_CAUSES, speak_aloud=True)
+
+
+@bot.command()
+async def ayudame2(ctx):
+    # Sends the full list, but only reads a short sentence aloud
+    await reply(ctx, TEXT_HELP, speak_aloud=True, voice_text=TEXT_HELP_VOICE)
+
+
+@bot.command(name="help2")
+async def help2(ctx):
+    await reply(ctx, TEXT_HELP, speak_aloud=True, voice_text=TEXT_HELP_VOICE)
+
+
+# ---------------------------------------------------------------------------
+# Startup
+# ---------------------------------------------------------------------------
+token = os.getenv("DISCORD_TOKEN")
+if not token:
+    raise SystemExit("DISCORD_TOKEN is missing. Create it in the .env file")
+
+bot.run(token)
